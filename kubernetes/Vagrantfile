@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu-16.04"
+  config.vm.define "k8s_node1" do |k8s_node1|
+     k8s_node1.vm.provider :libvirt do |domain|
+       domain.memory = 4096
+       domain.cpus = 3
+       domain.nested = true
+       domain.volume_cache = 'none'
+     end
+  config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.synced_folder ".", "/home/vagrant/work",
+      owner: "vagrant", group: "vagrant"
+  end
+  config.vm.network "public_network", :bridge => 'br-public', :dev => 'br-public' , :type => "bridge" , :ip => "172.19.48.62" , :netmask => "255.255.0.0"
+end
