@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|                                                                                                                                             
+  config.vm.box = "ubuntu-14.04"
+  config.vm.define "devstack" do |devstack|
+     devstack.vm.provider :libvirt do |domain|
+       domain.memory = 6096
+       domain.cpus = 4
+       domain.nested = true                                                                
+       domain.volume_cache = 'none'                                                        
+     end                                                                                   
+  config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.synced_folder "./work", "/work",
+      owner: "vagrant", group: "vagrant"
+  end
+  config.vm.network "public_network", :bridge => 'br-pxe', :dev => 'br-pxe' , :type => "bridge" , :ip => "172.31.81.70" , :netmask => "255.255.255.0"
+end
